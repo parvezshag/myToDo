@@ -1,0 +1,17 @@
+# Logs
+cargo_check*.log
+cargo_check*.err
+
+# Local opencode artifacts
+opencode11/
+
+# Node / JS
+todo-app/node_modules/
+todo-app/dist/
+
+# Rust / Tauri build output
+todo-app/src-tauri/target/
+
+# Env / secrets
+.env
+*.local

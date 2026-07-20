@@ -1,0 +1,12 @@
+# Rust / Tauri
+/target/
+
+# Node
+node_modules/
+dist/
+
+# Logs
+*.log
+
+# Env
+.env
