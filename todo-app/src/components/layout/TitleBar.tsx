@@ -11,7 +11,6 @@ export function TitleBar() {
   const updateSetting = useSettingsStore((s) => s.updateSetting);
 
   const handleMinimize = () => appWindow.minimize();
-  const handleMaximize = () => appWindow.toggleMaximize();
   const handleClose = () => appWindow.close();
   const handleToggleAOT = () => updateSetting('always_on_top', !alwaysOnTop);
 
@@ -52,11 +51,6 @@ export function TitleBar() {
         <button className="titlebar-btn titlebar-btn--minimize" onClick={handleMinimize}>
           <svg width="12" height="12" viewBox="0 0 12 12">
             <rect x="1" y="5.5" width="10" height="1" fill="currentColor" />
-          </svg>
-        </button>
-        <button className="titlebar-btn titlebar-btn--maximize" onClick={handleMaximize}>
-          <svg width="12" height="12" viewBox="0 0 12 12">
-            <rect x="1.5" y="1.5" width="9" height="9" rx="1" fill="none" stroke="currentColor" strokeWidth="1" />
           </svg>
         </button>
         <button className="titlebar-btn titlebar-btn--close" onClick={handleClose}>

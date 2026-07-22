@@ -508,6 +508,16 @@ body {
   border-left-color: var(--danger-color) !important;
 }
 
+.task-card--inprogress-overdue {
+  border-color: var(--danger-color) !important;
+  background: rgba(232, 17, 35, 0.18) !important;
+  box-shadow: 0 0 0 1px var(--danger-color), 0 4px 16px rgba(232, 17, 35, 0.25) !important;
+}
+
+.task-card--inprogress-overdue .task-card-title {
+  color: var(--danger-color) !important;
+}
+
 .task-card-header {
   display: flex;
   align-items: center;
@@ -627,6 +637,24 @@ body {
 .due-today {
   color: var(--warning-color) !important;
   background: rgba(255, 170, 68, 0.1) !important;
+}
+
+.task-completion-badge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.completion-late {
+  color: var(--danger-color) !important;
+  background: rgba(232, 17, 35, 0.12) !important;
+}
+
+.completion-ontime {
+  color: var(--success-color) !important;
+  background: rgba(76, 175, 80, 0.12) !important;
 }
 
 .task-time-left {

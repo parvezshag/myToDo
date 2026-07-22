@@ -43,6 +43,16 @@ export function KanbanCard({ task, isOverlay }: KanbanCardProps) {
   const isSelected = selectedTaskId === task.id;
   const overdue = isOverdue(task.due_date) && task.status !== 'completed';
   const dueToday = isDueToday(task.due_date);
+  const inProgressOverdue =
+    task.status === 'in_progress' && isOverdue(task.due_date);
+
+  const completionDelay =
+    task.status === 'completed' && task.due_date && task.completed_at
+      ? new Date(task.completed_at).getTime() - new Date(task.due_date).getTime()
+      : null;
+  const delayDays = completionDelay ? Math.floor(completionDelay / 86400000) : 0;
+  const delayHours = completionDelay ? Math.floor((completionDelay % 86400000) / 3600000) : 0;
+  const delayMins = completionDelay ? Math.floor((completionDelay % 3600000) / 60000) : 0;
 
   const showContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -90,7 +100,7 @@ export function KanbanCard({ task, isOverlay }: KanbanCardProps) {
         transition={{ duration: 0.2 }}
       >
         <GlassPanel
-          className={`task-card ${isSelected ? 'task-card--selected' : ''} ${overdue ? 'task-card--overdue' : ''}`}
+          className={`task-card ${isSelected ? 'task-card--selected' : ''} ${overdue ? 'task-card--overdue' : ''} ${inProgressOverdue ? 'task-card--inprogress-overdue' : ''}`}
           blur={16}
           style={{ borderLeftColor: task.color || PRIORITY_COLORS[task.priority] }}
         >
@@ -152,6 +162,19 @@ export function KanbanCard({ task, isOverlay }: KanbanCardProps) {
             )}
             {task.status === 'hold' ? (
               <span className="task-hold-badge">Hold</span>
+            ) : task.status === 'completed' && task.due_date ? (
+              <>
+                <span className="task-due-badge">
+                  {formatDate(task.due_date)}
+                </span>
+                <span
+                  className={`task-completion-badge ${completionDelay && completionDelay > 0 ? 'completion-late' : 'completion-ontime'}`}
+                >
+                  {completionDelay && completionDelay > 0
+                    ? `${delayDays ? `${delayDays}d ` : ''}${delayHours ? `${delayHours}h ` : ''}${!delayDays && !delayHours ? `${delayMins}m ` : ''}late`
+                    : 'On time'}
+                </span>
+              </>
             ) : task.due_date ? (
               <span
                 className={`task-due-badge ${overdue ? 'due-overdue' : ''} ${dueToday ? 'due-today' : ''}`}

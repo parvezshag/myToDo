@@ -30,7 +30,7 @@ export function QuickAddPopup() {
     await addTask({
       title: title.trim(),
       priority,
-      status: dueDate ? 'todo' : 'hold',
+      status: dueDate ? 'in_progress' : 'hold',
       due_date: dueDate ? new Date(dueDate).toISOString() : null,
     });
     addToast('Task created', 'success');

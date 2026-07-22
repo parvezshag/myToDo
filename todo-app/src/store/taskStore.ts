@@ -3,6 +3,7 @@ import type { Task, CreateTaskInput, UpdateTaskInput, ReorderInput } from '@/typ
 import type { FilterType } from '@/types/common';
 import { invoke } from '@tauri-apps/api/core';
 import { logger } from '@/utils/logger';
+import { useToastStore } from '@/components/common/Toast';
 
 interface UndoAction {
   type: 'create' | 'update' | 'delete' | 'move';
@@ -117,6 +118,44 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     if (previousTask) {
       get().pushUndo({ type: 'update', taskId: parsed.id, previousState: previousTask, nextState: parsed });
     }
+
+    // Show delay toast when task is completed and had a due date
+    if (
+      parsed.status === 'completed' &&
+      previousTask &&
+      previousTask.status !== 'completed' &&
+      previousTask.due_date
+    ) {
+      const dueDate = new Date(previousTask.due_date).getTime();
+      const completedDate = parsed.completed_at
+        ? new Date(parsed.completed_at).getTime()
+        : Date.now();
+      const diffMs = completedDate - dueDate;
+      if (diffMs > 0) {
+        const diffDays = Math.floor(diffMs / 86400000);
+        const diffHours = Math.floor((diffMs % 86400000) / 3600000);
+        const diffMins = Math.floor((diffMs % 3600000) / 60000);
+        let delayStr = '';
+        if (diffDays > 0) delayStr += `${diffDays}d `;
+        if (diffHours > 0) delayStr += `${diffHours}h `;
+        if (diffMins > 0) delayStr += `${diffMins}m`;
+        useToastStore.getState().addToast(
+          `Task completed ${delayStr}late 🎉`,
+          'warning'
+        );
+      } else if (diffMs < 0) {
+        const earlyDays = Math.floor(Math.abs(diffMs) / 86400000);
+        const earlyHours = Math.floor((Math.abs(diffMs) % 86400000) / 3600000);
+        let earlyStr = '';
+        if (earlyDays > 0) earlyStr += `${earlyDays}d `;
+        if (earlyHours > 0) earlyStr += `${earlyHours}h `;
+        useToastStore.getState().addToast(
+          `Completed ${earlyStr}ahead of schedule ✅`,
+          'success'
+        );
+      }
+    }
+
     return parsed;
   },
 

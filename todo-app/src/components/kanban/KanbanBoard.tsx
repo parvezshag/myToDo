@@ -58,6 +58,11 @@ export function KanbanBoard() {
                   const bt = b.due_date ? new Date(b.due_date).getTime() : Infinity;
                   if (at !== bt) return at - bt;
                 }
+                if (col.id === 'completed') {
+                  const at = a.completed_at ? new Date(a.completed_at).getTime() : 0;
+                  const bt = b.completed_at ? new Date(b.completed_at).getTime() : 0;
+                  return bt - at;
+                }
                 return a.order_index - b.order_index;
               });
 

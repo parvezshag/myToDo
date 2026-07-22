@@ -1,6 +1,7 @@
 # Logs
 cargo_check*.log
 cargo_check*.err
+todo-app/*.log
 
 # Local opencode artifacts
 opencode11/

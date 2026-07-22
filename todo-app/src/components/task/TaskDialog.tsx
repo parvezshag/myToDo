@@ -50,7 +50,7 @@ export function TaskDialog() {
         status: task.status,
         category: task.category,
         tags: task.tags.join(', '),
-        due_date: task.due_date ? task.due_date.slice(0, 10) : '',
+        due_date: task.due_date ? task.due_date.slice(0, 16) : '',
         progress: task.progress,
         notes: task.notes,
         estimated_time: task.estimated_time?.toString() || '',
@@ -80,6 +80,11 @@ export function TaskDialog() {
       .filter(Boolean);
 
     const isJustCompleted = form.status === 'completed' && task.status !== 'completed';
+
+    // Auto-exit hold when a due date is assigned
+    if (task.status === 'hold' && form.due_date && form.status === 'hold') {
+      form.status = 'in_progress';
+    }
 
     await updateTask({
       id: task.id,
@@ -211,7 +216,7 @@ export function TaskDialog() {
                 <div className="dialog-field">
                   <label>Due Date</label>
                   <input
-                    type="date"
+                    type="datetime-local"
                     className="dialog-input"
                     value={form.due_date}
                     onChange={(e) => setForm((f) => ({ ...f, due_date: e.target.value }))}
